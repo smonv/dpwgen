@@ -1,1 +1,1 @@
-# dpwgen
+# Diceware Passphrase Generator
