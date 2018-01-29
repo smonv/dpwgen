@@ -3,17 +3,18 @@ package main
 import (
 	"crypto/rand"
 	"flag"
-	"fmt"
 	"math/big"
+	"os"
 	"strconv"
 
+	"github.com/olekukonko/tablewriter"
 	"github.com/tthanh/dpwgen/wordlist"
 )
 
 func main() {
 	n := flag.Int("n", 6, "number of words")
 	flag.Parse()
-	words := []string{}
+	keys := []string{}
 	for w := 0; w < *n; w++ {
 		k := ""
 		for i := 0; i < 5; i++ {
@@ -23,10 +24,23 @@ func main() {
 			}
 			k += strconv.Itoa(int(m.Int64()) + 1)
 		}
-		words = append(words, k)
+		keys = append(keys, k)
 	}
 
-	for _, v := range words {
-		fmt.Printf("%s - %s\n", v, wordlist.EFFLarge[v])
+	data := [][]string{
+		[]string{},
 	}
+
+	for _, v := range keys {
+		data[0] = append(data[0], wordlist.EFFLarge[v])
+	}
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader(keys)
+
+	for _, v := range data {
+		table.Append(v)
+	}
+
+	table.Render()
 }
